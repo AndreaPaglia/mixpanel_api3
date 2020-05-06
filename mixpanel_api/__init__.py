@@ -1259,15 +1259,16 @@ class Mixpanel(object):
     @staticmethod
     def _async_response_handler_callback(response):
         """Takes a Mixpanel API response and checks the status
-
         :param response: A Mixpanel API JSON response
         :type response: str
-
         """
-        response_data = json.loads(response)
-        if ('status' in response_data and response_data['status'] != 1) or ('status' not in response_data):
-            Mixpanel.LOGGER.warning("Bad API response: " + response)
-        Mixpanel.LOGGER.debug("API Response: " + response)
+        try:
+            response_data = json.loads(response)
+            if ('status' in response_data and response_data['status'] != 1) or ('status' not in response_data):
+                Mixpanel.LOGGER.warning("Bad API response: " + response)
+            Mixpanel.LOGGER.debug("API Response: " + response)
+        except Exception as e:
+            Mixpanel.LOGGER.debug('exception occurred during callback:' + repr(e))
 
     @staticmethod
     def _write_items_to_csv(items, output_file):
